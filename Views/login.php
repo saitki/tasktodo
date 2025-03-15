@@ -60,9 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(!$loginSuccess) {
                 echo "Credenciales incorrectas";           
             } else {
-                echo "Cxd";           
-
-                header('Location: task.php');
+                header('Location: views/task.php');
             }
         ?>
     </div>
