@@ -1,22 +1,22 @@
 <?php
-class database {
-    
+class database {  
     private $user = "root";
-    private $password = "db_todo";
-    private $database = "db";
+    private $password = "";
+    private $database = "db_todo";
     private $host = "localhost";
     private $conn;
     public function getConnection(){
         $this->conn = null;
         try{
-            $this->conn = new PDO("mysql:host=". $this->host . ";dbname=".$this->database, $this->user, $this->password);
+            $this->conn = new PDO(
+                "mysql:host=" . $this->host . ";dbname=" . $this->database, $this->user, $this->password
+            );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $exception){
-            return $exception->getMessage();
+            die("Error de conexión: " . $exception->getMessage()); // Muestra el error y detiene la ejecución        }
         }
-       return $this->conn;
+        return $this->conn;
     }
 }
-
 ?>
 
