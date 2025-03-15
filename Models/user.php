@@ -1,8 +1,14 @@
 <?php
-require_once __DIR__ . "/../../config/database.php";
+require_once __DIR__ . "/../Database/database.php";
 class User {
-    public function getDataLogin($email, $password, $pdo ) {
-        $query = $pdo->prepare('SELECT * FROM usuarios WHERE email = :email');
+    private $conn;
+
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+
+    public function getDataLogin($email, $password ) {
+        $query = $this->conn->prepare('SELECT * FROM users WHERE email = :email');
         $query->execute(['email' => $email]);
         $usuario = $query->fetch(PDO::FETCH_ASSOC);
 
