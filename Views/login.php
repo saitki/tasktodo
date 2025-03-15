@@ -1,11 +1,18 @@
 <?php 
-require_once 'Models/user.php';
-require_once 'Database/database.php';
+require_once __DIR__ . '/../Models/user.php';
+require_once __DIR__ . '/../Database/database.php';
 $conexion = new database;
 $pdo = $conexion->getConnection();
 
-$user = new user();
-$user->getDataLogin(,,$pdo)
+$user = new user($pdo);
+$loginSuccess = true;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'];
+
+    $loginSuccess = $user->getDataLogin( $email, $password);
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -49,6 +56,15 @@ $user->getDataLogin(,,$pdo)
         <div class="mt-3 text-center">
             <span>¿No tienes una cuenta? </span><a href="views/register.php">Registrarse</a>
         </div>
+        <?php
+            if(!$loginSuccess) {
+                echo "Credenciales incorrectas";           
+            } else {
+                echo "Cxd";           
+
+                header('Location: task.php');
+            }
+        ?>
     </div>
 </div>
 

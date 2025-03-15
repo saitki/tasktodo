@@ -1,6 +1,5 @@
 <?php 
-require_once __DIR__ . '/DB/db.php'; 
-require_once __DIR__ . '/functions.php'; 
+require_once __DIR__ . "/../Database/database.php";
 
 $nameError = "";
 $emailError = "";
@@ -25,13 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $valid = false;
     } else {
         $email = $_POST["email"];
-    }
-
-    if (empty($_POST["message"])) {
-        $messageError = "Este campo es obligatorio";
-        $valid = false;
-    } else {
-        $message = $_POST["message"];
     }
 
     if ($valid) {
@@ -78,14 +70,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container">
     <div class="register-container">
         <h3 class="text-center">Registro de Usuario</h3>
-        <form>
+        <p class="text-center">o <a href="login.php">iniciar sersion</a> en su cuenta</p>
+
+        <form method="POST" action="">
             <div class="mb-3">
-                <label for="username" class="form-label">Usuario</label>
-                <input type="text" class="form-control" id="username" placeholder="Ingresa tu usuario">
+                <label for="name" class="form-label">Usuario</label>
+                <input type="text" name="name" class="form-control" id="name" placeholder="Ingresa tu nombre" >
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo">
+                <input type="email" name="email" class="form-control" id="email" placeholder="Ingresa tu correo" >
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
