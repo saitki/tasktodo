@@ -1,4 +1,6 @@
 <?php 
+require_once __DIR__ . '/../Models/user.php';
+
 require_once __DIR__ . "/../Database/database.php";
 session_start(); 
 
@@ -13,6 +15,11 @@ $emailError = "";
 $name = "";
 $email = ""; 
 
+$conexion = new database;
+$pdo = $conexion->getConnection();
+$registerSuccess = false; 
+$userRegister = false; 
+$user = new User($pdo);
 
 //$conexion = conexion();
 
@@ -32,20 +39,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $email = $_POST["email"];
     }
+    if (empty($_POST["password"])) {
+        $passwordError = "Este campo es obligatorio";
+        $valid = false;
+    } else {
+        $password = $_POST["password"];
+    }
+    $userRegister = $user->getEmail($email);
 
     if ($valid) {
-       // $status = addUser($name, $lastname, $option, $message, $email, $checkcontacted, $conexion);
-        echo "<script>
-            document.addEventListener('DOMContentLoaded', function() {
-                showCustomAlert('Éxito', " . json_encode($status) . ");
-            });
-        </script>";
-    } else {
-        echo "<script>
-            document.addEventListener('DOMContentLoaded', function() {
-                showCustomAlert('Error', 'Por favor, complete todos los campos obligatorios.');
-            });
-        </script>";
+       if(!$userRegister){
+            $user->createUser($name,$email,$password);
+            header("Location: login.php");
+
+       } 
+
     }
     
 }
@@ -93,17 +101,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="email" name="email" class="form-control" id="email" placeholder="Ingresa tu correo" >
                 <?php if (!empty($emailError)): ?>
                     <div class="error" style="color:red;"><?php echo $emailError; ?>*</div>
-            <?php endif; ?>    
+                <?php endif; ?>    
             </div>
             
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" placeholder="Crea una contraseña">
+                <input type="password" name = "password" class="form-control" id="password" placeholder="Crea una contraseña">
+                <?php if (!empty($passwordError)): ?>
+                    <div class="error" style="color:red;"><?php echo $passwordError; ?>*</div>
+                <?php endif; ?>    
             </div>
             <button type="submit" class="btn btn-primary w-100">Crear Cuenta</button>
             
           
         </form>
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($userRegister) {
+                echo "<div class='text-danger text-center mt-2'>Ya existe el usuario</div>";
+            } 
+        }
+        ?>
     </div>
 </div>
 
