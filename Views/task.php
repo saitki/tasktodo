@@ -29,7 +29,7 @@ if (!$_SESSION['user']) {
     <?php include('modalDeleteTask.php'); ?>
 
   <form class="container-fluid justify-content-start">
-    <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Crear nueva tarea</button>
+    <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addTaskModal">Crear nueva tarea</button>
 
     <a class="btn btn-danger me-2" href="../cerrar.php">Cerrar Sesión</a>
     </form>
@@ -39,62 +39,36 @@ if (!$_SESSION['user']) {
 
 <div class="container-sm"> 
   
-<ul class="list-group" style="margin-top: 20px; padding: 0;">
-  <li class="list-group-item d-flex align-items-center justify-content-between border rounded mb-2 shadow-sm p-3">
-    <div class="d-flex align-items-center">
-    <input class="form-check-input me-3 checkbox-item" type="checkbox" id="firstCheckbox">
-    <label class="form-check-label fw-bold list-title" for="firstCheckbox">First checkbox</label>
-    </div>
-    <!-- Botón de menú desplegable -->
-    <div class="dropdown" style="background-color: transparent;">
-      <button class="btn btn-light btn-sm dropdown-toggle"style="background-color: transparent; border:  0px;"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        ☰
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">✏ Editar</a></li>
-        <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal">🗑 Eliminar</a></li>
-      </ul>
-    </div>
-  </li>
-
-  <li class="list-group-item d-flex align-items-center justify-content-between border rounded mb-2 shadow-sm p-3">
-    <div class="d-flex align-items-center">
-      <input class="form-check-input me-3" type="checkbox" value="" id="secondCheckbox">
-      <label class="form-check-label fw-bold" for="secondCheckbox">Second checkbox</label>
-    </div>
-    <div class="dropdown">
-      <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        ☰
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">✏ Editar</a></li>
-        <li><a class="dropdown-item text-danger" href="#">🗑 Eliminar</a></li>
-      </ul>
-    </div>
-  </li>
-
-  <li class="list-group-item d-flex align-items-center justify-content-between border rounded shadow-sm p-3">
-    <div class="d-flex align-items-center">
-      <input class="form-check-input me-3" type="checkbox" value="" id="thirdCheckbox">
-      <label class="form-check-label fw-bold" for="thirdCheckbox">Third checkbox</label>
-    </div>
-    <div class="dropdown">
-      <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        ☰
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">✏ Editar</a></li>
-        <li><a class="dropdown-item text-danger" href="#">🗑 Eliminar</a></li>
-      </ul>
-    </div>
-  </li>
-</ul>
+<?php if (empty($tasks)): ?>
+    <ul class="list-group" style="margin-top: 20px; padding: 0;">
+    <h3 style="margin-bottom: 100px;">No tienes tareas pendientes</h3>
+<?php else: ?>
+  <?php foreach ($tasks as $task): ?>
+    <ul class="list-group" style="margin-top: 20px; padding: 0;">
+      <li class="list-group-item d-flex align-items-center justify-content-between border rounded mb-2 shadow-sm p-3">
+        <div class="d-flex align-items-center">
+        <input class="form-check-input me-3 checkbox-item" type="checkbox" id="firstCheckbox">
+        <label class="form-check-label fw-bold list-title" for="firstCheckbox">First checkbox</label>
+        </div>
+        <!-- Botón de menú desplegable -->
+        <div class="dropdown" style="background-color: transparent;">
+          <button class="btn btn-light btn-sm dropdown-toggle"style="background-color: transparent; border:  0px;"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            ☰
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-whatever="<?php echo $task['id']; ?>">✏ Editar</a></li>
+            <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-whatever="<?php echo $task['id']; ?>">🗑 Eliminar</a></li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  <?php endforeach; ?>
+<?php endif; ?>
 </div>
-
 <script>
-  const exampleModal = document.getElementById('exampleModal')
-if (exampleModal) {
-  exampleModal.addEventListener('show.bs.modal', event => {
+  const exampleModal = document.getElementById('editModal')
+if (editModal) {
+  editModal.addEventListener('show.bs.modal', event => {
     // Button that triggered the modal
     const button = event.relatedTarget
     // Extract info from data-bs-* attributes
@@ -103,15 +77,52 @@ if (exampleModal) {
     // and then do the updating in a callback.
 
     // Update the modal's content.
-    const modalTitle = exampleModal.querySelector('.modal-title')
-    const modalBodyInput = exampleModal.querySelector('.modal-body input')
-    const modalBodyInputText = exampleModal.querySelector('.modal-body textarea')
+    const modalTitle = editModal.querySelector('.modal-title')
+    const modalBodyInput = editModal.querySelector('.modal-body input')
+    const modalBodyInputText = editModal.querySelector('.modal-body textarea')
 
     modalTitle.textContent = `Editar tarea ${recipient}`
     modalBodyInput.value = recipient
     modalBodyInputText.value = recipient
   })
 }
+  const addTaskModal = document.getElementById('addTaskModal')
+if (addTaskModal) {
+  addTaskModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    const recipient = button.getAttribute('data-bs-whatever')
+    // If necessary, you could initiate an Ajax request here
+    // and then do the updating in a callback.
+
+    // Update the modal's content.
+    const modalBodyInput = addTaskModal.querySelector('.modal-body input')
+    const modalBodyInputText = addTaskModal.querySelector('.modal-body textarea')
+
+    modalBodyInput.value = recipient
+    modalBodyInputText.value = recipient
+  })
+}
+
+const DeleteModal = document.getElementById('DeleteModal')
+if (DeleteModal) {
+  DeleteModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    const recipient = button.getAttribute('data-bs-whatever')
+    // If necessary, you could initiate an Ajax request here
+    // and then do the updating in a callback.
+
+    // Update the modal's content.
+    const modalTitle = DeleteModal.querySelector('.title-modal-delete')
+    modalTitle.textContent = `¿Realmente quieres eliminar la tarea ${recipient}?`
+    modalBodyInput.value = recipient
+    modalBodyInputText.value = recipient
+  })
+}
+
 </script>
 
 <script>
