@@ -28,6 +28,8 @@ if (!$_SESSION['user']) {
     </button>
     <nav class="navbar bg-body-tertiary">
     <?php include('modalAddTask.php'); ?>
+    <?php include('modalEditTask.php'); ?>
+    <?php include('modalDeleteTask.php'); ?>
 
   <form class="container-fluid justify-content-start">
     <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Crear nueva tarea</button>
@@ -40,20 +42,20 @@ if (!$_SESSION['user']) {
 
 <div class="container-sm"> 
   
-<<ul class="list-group" style="margin-top: 20px; padding: 0;">
+<ul class="list-group" style="margin-top: 20px; padding: 0;">
   <li class="list-group-item d-flex align-items-center justify-content-between border rounded mb-2 shadow-sm p-3">
     <div class="d-flex align-items-center">
-      <input class="form-check-input me-3" type="checkbox" value="" id="firstCheckbox">
-      <label class="form-check-label fw-bold" for="firstCheckbox">First checkbox</label>
+    <input class="form-check-input me-3 checkbox-item" type="checkbox" id="firstCheckbox">
+    <label class="form-check-label fw-bold list-title" for="firstCheckbox">First checkbox</label>
     </div>
     <!-- Botón de menú desplegable -->
-    <div class="dropdown">
-      <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="dropdown" style="background-color: transparent;">
+      <button class="btn btn-light btn-sm dropdown-toggle"style="background-color: transparent; border:  0px;"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
         ☰
       </button>
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">✏ Editar</a></li>
-        <li><a class="dropdown-item text-danger" href="#">🗑 Eliminar</a></li>
+        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">✏ Editar</a></li>
+        <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalDelete">🗑 Eliminar</a></li>
       </ul>
     </div>
   </li>
@@ -108,11 +110,32 @@ if (exampleModal) {
     const modalBodyInput = exampleModal.querySelector('.modal-body input')
     const modalBodyInputText = exampleModal.querySelector('.modal-body textarea')
 
-    modalTitle.textContent = `New message to ${recipient}`
+    modalTitle.textContent = `Editar tarea ${recipient}`
     modalBodyInput.value = recipient
     modalBodyInputText.value = recipient
   })
 }
+</script>
+
+<script>
+  // Seleccionar todos los checkboxes
+  document.querySelectorAll('.checkbox-item').forEach(checkbox => {
+    checkbox.addEventListener('change', function () {
+      // Obtener el label asociado
+      let label = this.nextElementSibling;
+      let listItem = this.closest('li');
+      // Agregar o quitar subrayado dependiendo del estado del checkbox
+      if (this.checked) {
+        label.style.textDecoration = 'line-through'; // Tachar el texto
+        listItem.style.backgroundColor = '#e0e0e0';  // Cambiar el fondo a gris
+
+      } else {
+        label.style.textDecoration = 'none';
+        listItem.style.backgroundColor = '';  // Eliminar el fondo gris
+
+      }
+    });
+  });
 </script>
 </body>
 </html>
