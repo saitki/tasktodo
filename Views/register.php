@@ -111,7 +111,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="error" style="color:red;"><?php echo $passwordError; ?>*</div>
                 <?php endif; ?>    
             </div>
-            <button type="submit" class="btn btn-primary w-100">Crear Cuenta</button>
+
+            <p id="lengthError" class="error" style="color:red; font-size: 14px;">Debe tener al menos 8 caracteres*</p>
+            <p id="uppercaseError" class="error" style="color:red; font-size: 14px;">Debe contener al menos una letra mayúscula*</p>
+
+            <button type="submit" class="btn btn-primary w-100" id="submitBtn" disabled>Crear Cuenta</button>
             
           
         </form>
@@ -124,6 +128,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ?>
     </div>
 </div>
+
+
+<script>
+document.getElementById("password").addEventListener("input", function() {
+    let password = this.value;
+    let lengthError = document.getElementById("lengthError");
+    let uppercaseError = document.getElementById("uppercaseError");
+    let submitBtn = document.getElementById("submitBtn");
+
+    if (password.length >= 8) {
+        lengthError.style.display = "none";
+    } else {
+        lengthError.style.display = "block";
+    }
+
+    if (/[A-Z]/.test(password)) {
+        uppercaseError.style.display = "none";
+    } else {
+        uppercaseError.style.display = "block";
+    }
+
+    if (password.length >= 8 && /[A-Z]/.test(password)) {
+        successMsg.style.display = "block";
+        submitBtn.disabled = false;
+    } else {
+        successMsg.style.display = "none";
+        submitBtn.disabled = true;
+    }
+});
+</script>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
