@@ -27,12 +27,92 @@ if (!$_SESSION['user']) {
       <span class="navbar-toggler-icon"></span>
     </button>
     <nav class="navbar bg-body-tertiary">
+    <?php include('modalAddTask.php'); ?>
+
   <form class="container-fluid justify-content-start">
-    <a class="btn btn-primary me-2" type="button">Crear nueva tarea</a>
+    <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Crear nueva tarea</button>
+
     <a class="btn btn-danger me-2" href="../cerrar.php">Cerrar Sesión</a>
     </form>
 </nav>
   </div>
 </nav>
+
+<div class="container-sm"> 
+  
+<<ul class="list-group" style="margin-top: 20px; padding: 0;">
+  <li class="list-group-item d-flex align-items-center justify-content-between border rounded mb-2 shadow-sm p-3">
+    <div class="d-flex align-items-center">
+      <input class="form-check-input me-3" type="checkbox" value="" id="firstCheckbox">
+      <label class="form-check-label fw-bold" for="firstCheckbox">First checkbox</label>
+    </div>
+    <!-- Botón de menú desplegable -->
+    <div class="dropdown">
+      <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        ☰
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">✏ Editar</a></li>
+        <li><a class="dropdown-item text-danger" href="#">🗑 Eliminar</a></li>
+      </ul>
+    </div>
+  </li>
+
+  <li class="list-group-item d-flex align-items-center justify-content-between border rounded mb-2 shadow-sm p-3">
+    <div class="d-flex align-items-center">
+      <input class="form-check-input me-3" type="checkbox" value="" id="secondCheckbox">
+      <label class="form-check-label fw-bold" for="secondCheckbox">Second checkbox</label>
+    </div>
+    <div class="dropdown">
+      <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        ☰
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">✏ Editar</a></li>
+        <li><a class="dropdown-item text-danger" href="#">🗑 Eliminar</a></li>
+      </ul>
+    </div>
+  </li>
+
+  <li class="list-group-item d-flex align-items-center justify-content-between border rounded shadow-sm p-3">
+    <div class="d-flex align-items-center">
+      <input class="form-check-input me-3" type="checkbox" value="" id="thirdCheckbox">
+      <label class="form-check-label fw-bold" for="thirdCheckbox">Third checkbox</label>
+    </div>
+    <div class="dropdown">
+      <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        ☰
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">✏ Editar</a></li>
+        <li><a class="dropdown-item text-danger" href="#">🗑 Eliminar</a></li>
+      </ul>
+    </div>
+  </li>
+</ul>
+</div>
+
+<script>
+  const exampleModal = document.getElementById('exampleModal')
+if (exampleModal) {
+  exampleModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    const recipient = button.getAttribute('data-bs-whatever')
+    // If necessary, you could initiate an Ajax request here
+    // and then do the updating in a callback.
+
+    // Update the modal's content.
+    const modalTitle = exampleModal.querySelector('.modal-title')
+    const modalBodyInput = exampleModal.querySelector('.modal-body input')
+    const modalBodyInputText = exampleModal.querySelector('.modal-body textarea')
+
+    modalTitle.textContent = `New message to ${recipient}`
+    modalBodyInput.value = recipient
+    modalBodyInputText.value = recipient
+  })
+}
+</script>
 </body>
 </html>
