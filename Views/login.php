@@ -3,6 +3,12 @@ require_once __DIR__ . '/../Models/user.php';
 require_once __DIR__ . '/../Database/database.php';
 session_start(); 
 
+if ($_SESSION['user']) {
+    header("Location: task.php");
+    exit();
+  }
+  
+
 $conexion = new database;
 $pdo = $conexion->getConnection();
 $loginSuccess = false; 

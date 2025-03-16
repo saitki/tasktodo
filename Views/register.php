@@ -1,5 +1,11 @@
 <?php 
 require_once __DIR__ . "/../Database/database.php";
+session_start(); 
+
+if ($_SESSION['user']) {
+    header("Location: task.php");
+    exit();
+  }
 
 $nameError = "";
 $emailError = "";
