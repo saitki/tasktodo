@@ -1,7 +1,6 @@
 <?php 
-require_once __DIR__ . '/../Models/user.php';
+require_once __DIR__ . '/../Controllers/userController.php';
 
-require_once __DIR__ . "/../Database/database.php";
 session_start(); 
 
 
@@ -15,12 +14,10 @@ $emailError = "";
 $name = "";
 $email = ""; 
 
-$conexion = new database;
-$pdo = $conexion->getConnection();
 $registerSuccess = false; 
 $userRegister = false; 
-$user = new User($pdo);
 
+$userController = new userController(); 
 //$conexion = conexion();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -45,11 +42,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $password = $_POST["password"];
     }
-    $userRegister = $user->getEmail($email);
+    $userRegister = $userController->getEmailValid($email);
 
     if ($valid) {
        if(!$userRegister){
-            $user->createUser($name,$email,$password);
+            $userController->registerUser($name,$email,$password);
             header("Location: login.php");
 
        } 
@@ -150,10 +147,8 @@ document.getElementById("password").addEventListener("input", function() {
     }
 
     if (password.length >= 8 && /[A-Z]/.test(password)) {
-        successMsg.style.display = "block";
         submitBtn.disabled = false;
     } else {
-        successMsg.style.display = "none";
         submitBtn.disabled = true;
     }
 });
