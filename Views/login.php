@@ -3,10 +3,10 @@ require_once __DIR__ . '/../Models/user.php';
 require_once __DIR__ . '/../Database/database.php';
 session_start(); 
 
-if ($_SESSION['user']) {
+if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     header("Location: task.php");
     exit();
-  }
+}
   
 
 $conexion = new database;
