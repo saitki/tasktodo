@@ -1,6 +1,5 @@
 <?php 
-require_once __DIR__ . '/../Models/user.php';
-require_once __DIR__ . '/../Database/database.php';
+require_once __DIR__ . '/../Controllers/userController.php';
 session_start(); 
 
 if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
@@ -8,18 +7,15 @@ if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
     exit();
 }
   
-
-$conexion = new database;
-$pdo = $conexion->getConnection();
 $loginSuccess = false; 
-$user = new User($pdo); 
+$userController = new userController(); 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'];
 
 
-    $loginSuccess = $user->getDataLogin($email, $password);
+    $loginSuccess = $userController->getAuthentication($email, $password);
 }
 
 ?>
