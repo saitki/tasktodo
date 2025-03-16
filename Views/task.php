@@ -1,3 +1,14 @@
+<?php 
+require_once __DIR__ . '/../Models/user.php';
+require_once __DIR__ . '/../Database/database.php';
+session_start(); 
+
+if (!$_SESSION['user']) {
+  header("Location: login.php");
+  exit();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,9 +28,9 @@
     </button>
     <nav class="navbar bg-body-tertiary">
   <form class="container-fluid justify-content-start">
-    <button class="btn btn-primary me-2" type="button">Crear nueva tarea</button>
-    <button class="btn btn-danger me-2" type="button">Cerrar Sesion</button>
-  </form>
+    <a class="btn btn-primary me-2" type="button">Crear nueva tarea</a>
+    <a class="btn btn-danger me-2" href="../cerrar.php">Cerrar Sesión</a>
+    </form>
 </nav>
   </div>
 </nav>
