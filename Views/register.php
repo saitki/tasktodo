@@ -76,22 +76,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="mb-3">
                 <label for="name" class="form-label">Usuario</label>
                 <input type="text" name="name" class="form-control" id="name" placeholder="Ingresa tu nombre" >
+                <?php if (!empty($nameError)): ?>
+                    <div class="error" style="color:red;"><?php echo $nameError; ?>*</div>
+                <?php endif; ?>
             </div>
+            
             <div class="mb-3">
                 <label for="email" class="form-label">Correo Electrónico</label>
                 <input type="email" name="email" class="form-control" id="email" placeholder="Ingresa tu correo" >
+                <?php if (!empty($emailError)): ?>
+                    <div class="error" style="color:red;"><?php echo $emailError; ?>*</div>
+            <?php endif; ?>    
             </div>
+            
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
                 <input type="password" class="form-control" id="password" placeholder="Crea una contraseña">
             </div>
             <button type="submit" class="btn btn-primary w-100">Crear Cuenta</button>
-            <?php if (!empty($nameError)): ?>
-                    <div class="error"><?php echo $nameError; ?></div>
-            <?php endif; ?>
-            <?php if (!empty($emailError)): ?>
-                    <div class="error"><?php echo $emailError; ?></div>
-            <?php endif; ?>    
+            
+          
         </form>
     </div>
 </div>
