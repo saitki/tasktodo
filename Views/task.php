@@ -23,9 +23,6 @@ if (!$_SESSION['user']) {
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Task Manager</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
     <nav class="navbar bg-body-tertiary">
     <?php include('modalAddTask.php'); ?>
     <?php include('modalEditTask.php'); ?>
@@ -55,7 +52,7 @@ if (!$_SESSION['user']) {
       </button>
       <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">✏ Editar</a></li>
-        <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#exampleModalDelete">🗑 Eliminar</a></li>
+        <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal">🗑 Eliminar</a></li>
       </ul>
     </div>
   </li>
