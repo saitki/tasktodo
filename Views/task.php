@@ -1,6 +1,7 @@
 <?php 
-require_once __DIR__ . '/../Models/user.php';
-require_once __DIR__ . '/../Database/database.php';
+require_once __DIR__ . '/../Controllers/userController.php';
+require_once __DIR__ . '/../Controllers/taskController.php';
+
 session_start(); 
 
 if (!$_SESSION['user']) {
@@ -8,13 +9,53 @@ if (!$_SESSION['user']) {
   exit();
 }
 
+$userController = new userController();
+$taskController = new taskController();
+$tasks = $taskController->getAllTaskUser($_SESSION['user']);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $closeSesion = $_POST['closeSesion'];
+
+  if(isset($_POST['taskId'], $_POST['status'])){
+    try {
+      $taskId = $_POST['taskId'];  // Correcto, usas taskId de POST
+      $status = $_POST['status'];  // Correcto, usas status de POST
+      $taskController->updateStatusTask($taskId, $status);  // Actualizas la tarea
+    } catch (Exception $e) {
+        echo "<script type='text/javascript'>
+            alert('Error: " . addslashes($e->getMessage()) . "');
+        </script>";
+    }
+  }
+
+
+  switch ($action) {
+    case 'createTask':
+        try {
+          $taskController->createTask();
+        } catch (Exception $e) {
+            echo "<script type='text/javascript'>
+                alert('Error: " . addslashes($e->getMessage()) . "');
+            </script>";
+        }
+    
+      
+       
+        break;
+      default:
+        echo "<script>alert('Acción no válida');</script>";
+      }
+
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Task Manager</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
@@ -25,8 +66,6 @@ if (!$_SESSION['user']) {
     <a class="navbar-brand" href="#">Task Manager</a>
     <nav class="navbar bg-body-tertiary">
     <?php include('modalAddTask.php'); ?>
-    <?php include('modalEditTask.php'); ?>
-    <?php include('modalDeleteTask.php'); ?>
 
   <form class="container-fluid justify-content-start">
     <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addTaskModal">Crear nueva tarea</button>
@@ -47,8 +86,8 @@ if (!$_SESSION['user']) {
     <ul class="list-group" style="margin-top: 20px; padding: 0;">
       <li class="list-group-item d-flex align-items-center justify-content-between border rounded mb-2 shadow-sm p-3">
         <div class="d-flex align-items-center">
-        <input class="form-check-input me-3 checkbox-item" type="checkbox" id="firstCheckbox">
-        <label class="form-check-label fw-bold list-title" for="firstCheckbox">First checkbox</label>
+        <input class="form-check-input me-3 checkbox-item" type="checkbox" id="firstCheckbox" data-task-id="1" <?= $task['status'] ? 'checked' : '' ?>>
+        <label class="form-check-label fw-bold list-title" for="firstCheckbox"><?php echo $task['title']?></label>
         </div>
         <!-- Botón de menú desplegable -->
         <div class="dropdown" style="background-color: transparent;">
@@ -62,6 +101,9 @@ if (!$_SESSION['user']) {
         </div>
       </li>
     </ul>
+    <?php include('modalEditTask.php'); ?>
+    <?php include('modalDeleteTask.php'); ?>
+
   <?php endforeach; ?>
 <?php endif; ?>
 </div>
@@ -78,8 +120,7 @@ if (editModal) {
 
     // Update the modal's content.
     const modalTitle = editModal.querySelector('.modal-title')
-    const modalBodyInput = editModal.querySelector('.modal-body input')
-    const modalBodyInputText = editModal.querySelector('.modal-body textarea')
+
 
     modalTitle.textContent = `Editar tarea ${recipient}`
     modalBodyInput.value = recipient
@@ -117,7 +158,7 @@ if (DeleteModal) {
 
     // Update the modal's content.
     const modalTitle = DeleteModal.querySelector('.title-modal-delete')
-    modalTitle.textContent = `¿Realmente quieres eliminar la tarea ${recipient}?`
+  //  modalTitle.textContent = `¿Realmente quieres eliminar la tarea ${recipient}?`
     modalBodyInput.value = recipient
     modalBodyInputText.value = recipient
   })
@@ -126,24 +167,46 @@ if (DeleteModal) {
 </script>
 
 <script>
-  // Seleccionar todos los checkboxes
-  document.querySelectorAll('.checkbox-item').forEach(checkbox => {
-    checkbox.addEventListener('change', function () {
-      // Obtener el label asociado
-      let label = this.nextElementSibling;
-      let listItem = this.closest('li');
-      // Agregar o quitar subrayado dependiendo del estado del checkbox
-      if (this.checked) {
-        label.style.textDecoration = 'line-through'; // Tachar el texto
-        listItem.style.backgroundColor = '#e0e0e0';  // Cambiar el fondo a gris
+document.querySelectorAll('.checkbox-item').forEach(checkbox => {
+  function updateTaskState() {
+    let label = this.nextElementSibling;
+    let listItem = this.closest('li');
+    
+    if (this.checked) {
+      label.style.textDecoration = 'line-through'; 
+      listItem.style.backgroundColor = '#e0e0e0';  
+    } else {
+      label.style.textDecoration = 'none';
+      listItem.style.backgroundColor = ''; 
+    }
+  }
 
-      } else {
-        label.style.textDecoration = 'none';
-        listItem.style.backgroundColor = '';  // Eliminar el fondo gris
+  checkbox.addEventListener('change', updateTaskState);
 
-      }
-    });
-  });
+  updateTaskState.call(checkbox);
+});
+
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".checkbox-item").forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            let taskId = this.getAttribute("data-task-id"); 
+            let status = this.checked ? 1 : 0;
+            var url = "<?=$_SERVER['PHP_SELF']?>";
+fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `taskId=${taskId}&status=${status}` 
+})
+.then(response => response.json()) 
+.catch(error => console.error("Error en la petición:", error)); 
+
+        });
+    });
+});
+</script>
+
 </body>
 </html>
