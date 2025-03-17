@@ -14,11 +14,6 @@ $taskController = new taskController();
 $tasks = $taskController->getAllTaskUser($_SESSION['user']);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  if(isset($_POST['taskId'])){
-    $closeSesion = $_POST['closeSesion'];
-
-  }
-
   if(isset($_POST['taskId'], $_POST['status'])){
     try {
       $taskId = $_POST['taskId'];  
@@ -46,42 +41,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </script>";
     }
   }
-    if(isset($_POST['action'], $_POST['idTask'], $_POST['description'])){
+    if(isset($_POST['action'], $_POST['idTask'], $_POST['title'], $_POST['description'])){
       $action = $_POST['action']; 
       $idTask = $_POST['idTask'];  
       $title = $_POST['title'];  
       $description = $_POST['description'];  
-
-      switch ($action) {
-        case 'createTask':
-            try {
-              $taskController->createTask();
-              header('Location: ' . $_SERVER['PHP_SELF']); 
-              exit(); 
-            } catch (Exception $e) {
-                echo "<script type='text/javascript'>
-                    alert('Error: " . addslashes($e->getMessage()) . "');
-                </script>";
-            }
-        
-        case 'updateTask':
-            try {
-              $taskController->updateTask($idTask, $title, $description);
-              header('Location: ' . $_SERVER['PHP_SELF']); 
-              exit(); 
-            } catch (Exception $e) {
-                echo "<script type='text/javascript'>
-                    alert('Error: " . addslashes($e->getMessage()) . "');
-                </script>";
-            }
-        
-          
-           
-            break;
-          default:
-            echo "<script>alert('Acción no válida');</script>";
-          }
-    
+      try {
+        $taskController->updateTask($idTask, $title, $description);
+        header('Location: ' . $_SERVER['PHP_SELF']); 
+        exit(); 
+      } catch (Exception $e) {
+          echo "<script type='text/javascript'>
+              alert('Error: " . addslashes($e->getMessage()) . "');
+          </script>";
+      }
+    }
+    if(isset($_POST['action'], $_POST['title'], $_POST['description'])){
+      $action = $_POST['action']; 
+      $title = $_POST['title'];  
+      $description = $_POST['description'];  
+      try {
+        $taskController->createTask($_SESSION['user'], $title, $description);
+        header('Location: ' . $_SERVER['PHP_SELF']); 
+        exit(); 
+      } catch (Exception $e) {
+          echo "<script type='text/javascript'>
+              alert('Error: " . addslashes($e->getMessage()) . "');
+          </script>";
+      }
     }
 }
 
@@ -123,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <ul class="list-group" style="margin-top: 20px; padding: 0;">
       <li class="list-group-item d-flex align-items-center justify-content-between border rounded mb-2 shadow-sm p-3">
         <div class="d-flex align-items-center">
-        <input class="form-check-input me-3 checkbox-item" type="checkbox" id="firstCheckbox" data-task-id="1" <?= $task['status'] ? 'checked' : '' ?>>
+        <input class="form-check-input me-3 checkbox-item" type="checkbox" data-task-id="<?php echo $task['id']; ?>" <?php echo $task['status'] ? 'checked' : '' ?>>
         <label class="form-check-label fw-bold list-title" for="firstCheckbox"><?php echo $task['title']?></label>
         </div>
         <div class="dropdown" style="background-color: transparent;">
@@ -132,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $task['id']; ?>" data-bs-whatever="<?php echo $task['id']; ?>">✏ Editar</a></li>
-            <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-whatever="<?php echo $task['id']; ?>">🗑 Eliminar</a></li>
+            <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal<?php echo $task['id']; ?>">🗑 Eliminar</a></li>
           </ul>
         </div>
       </li>
@@ -212,19 +199,19 @@ document.addEventListener("DOMContentLoaded", function () {
         checkbox.addEventListener("change", function () {
             let taskId = this.getAttribute("data-task-id"); 
             let status = this.checked ? 1 : 0;
-            var url = "<?=$_SERVER['PHP_SELF']?>";
-fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `taskId=${taskId}&status=${status}` 
-})
-.then(response => response.json()) 
-.catch(error => console.error("Error en la petición:", error)); 
+            let url = "<?php echo $_SERVER['PHP_SELF'] ?>"; // Define la URL correctamente
 
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `taskId=${taskId}&status=${status}`
+            })
+            .catch(error => console.error("Error en la petición:", error));
         });
     });
 });
 </script>
+
 
 </body>
 </html>
