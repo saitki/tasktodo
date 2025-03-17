@@ -9,17 +9,17 @@
         <form>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Titulo</label>
-            <input type="text" class="form-control" id="recipient-name">
+            <input type="text" class="form-control" id="recipient-name" value="<?php echo $task['title']; ?>">
           </div>
           <div class="mb-3">
             <label for="message-text" class="col-form-label">Descripcion</label>
-            <textarea class="form-control" id="message-text"></textarea>
+            <textarea class="form-control" id="message-text" value="<?php echo $task['description']; ?>"></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send message</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Editar</button>
       </div>
     </div>
   </div>
