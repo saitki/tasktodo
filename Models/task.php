@@ -33,8 +33,10 @@ class task {
             'id' => $idTask
         ]);
         }
-    public function deleteTask(){
-
+    public function deleteTask($taskId){
+        $stmt = $this->conn->prepare("DELETE FROM task WHERE id = :id");
+        $stmt->bindParam(':id', $taskId);
+        $stmt->execute();
     }
 
 
