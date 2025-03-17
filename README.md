@@ -9,7 +9,7 @@
               
 ----
 ### Pasos para importar el proyecto              
-####Clonar repositorio
+#### Clonar repositorio
 Se descargar o se clona el proyecto, en la carpeta o ubicacion donde este configurada para estar en linea, en laragon la ubicacion en windows es C:\laragon\www\:
 
 `$ git clone https://github.com/saitki/tasktodo.git`
@@ -18,7 +18,7 @@ Accedemos a la raiz del proyecto, y el archivo sqldatabase.sql lo importamos en 
 
 Luego inicializamos los servicios de base de datos y el servidor apache o NGINX, en este caso en laragon.
 
-####Herramientas Manuales o kit de herramientas
+#### Herramientas Manuales o kit de herramientas
 En el proyecto de utilizo laragon, para tener php, apache, mysql preconfigurado para el desarrollo de este proyecto. Se puede utilzar xampp u otro software que ofrezca tales herramientas. O prepararlo manualmente.
 
 ### Pasos para configurar el proyecto 
