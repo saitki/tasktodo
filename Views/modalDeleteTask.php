@@ -5,7 +5,7 @@
     max-width: 100%; /* Evita que el label sea más ancho que su contenedor */
     display: block; /* Asegura que ocupe todo el ancho disponible */
 }</style>
-<div class="modal fade" id="DeleteModal" tabindex="-1" aria-labelledby="DeleteModalDeleteLabel" aria-hidden="true">
+<div class="modal fade" id="DeleteModal<?php echo $task['id']; ?>" tabindex="-1" aria-labelledby="DeleteModalDeleteLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
