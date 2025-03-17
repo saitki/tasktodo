@@ -15,8 +15,13 @@ class task {
         $stmt->execute(['id_user' => $id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function createTask(){
-
+    public function createTask($idUser,$title, $description){
+        $query = $this->conn->prepare('INSERT INTO task (id_user, title, description) VALUES (:id_user, :title, :description)');
+        $query->execute([
+            'id_user' => $idUser,
+            'title' => $title,
+            'description' => $description
+        ]);
     }
     public function updateTask($idTask, $title, $description){
         $query = $this->conn->prepare('UPDATE task SET title = :title, description = :description WHERE id = :id');
