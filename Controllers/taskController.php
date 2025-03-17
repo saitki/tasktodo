@@ -23,8 +23,8 @@ class taskController {
         $task = $this->taskModel->deleteTask();
         return $task;
     }
-    public function updateStatusTask() {
-        $task = $this->taskModel->updateStatusTask();
+    public function updateStatusTask($idTask,$status) {
+        $task = $this->taskModel->updateStatusTask($idTask,$status);
         return $task;
     }
 }
