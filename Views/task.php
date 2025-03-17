@@ -14,38 +14,59 @@ $taskController = new taskController();
 $tasks = $taskController->getAllTaskUser($_SESSION['user']);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $closeSesion = $_POST['closeSesion'];
+  if(isset($_POST['taskId'])){
+    $closeSesion = $_POST['closeSesion'];
+
+  }
 
   if(isset($_POST['taskId'], $_POST['status'])){
     try {
-      $taskId = $_POST['taskId'];  // Correcto, usas taskId de POST
-      $status = $_POST['status'];  // Correcto, usas status de POST
-      $taskController->updateStatusTask($taskId, $status);  // Actualizas la tarea
+      $taskId = $_POST['taskId'];  
+      $status = $_POST['status'];  
+      $taskController->updateStatusTask($taskId, $status);  
     } catch (Exception $e) {
         echo "<script type='text/javascript'>
             alert('Error: " . addslashes($e->getMessage()) . "');
         </script>";
     }
   }
+    if(isset($_POST['action'], $_POST['idTask'], $_POST['description'])){
+      $action = $_POST['action']; 
+      $idTask = $_POST['idTask'];  
+      $title = $_POST['title'];  
+      $description = $_POST['description'];  
 
-
-  switch ($action) {
-    case 'createTask':
-        try {
-          $taskController->createTask();
-        } catch (Exception $e) {
-            echo "<script type='text/javascript'>
-                alert('Error: " . addslashes($e->getMessage()) . "');
-            </script>";
-        }
+      switch ($action) {
+        case 'createTask':
+            try {
+              $taskController->createTask();
+              header('Location: ' . $_SERVER['PHP_SELF']); 
+              exit(); 
+            } catch (Exception $e) {
+                echo "<script type='text/javascript'>
+                    alert('Error: " . addslashes($e->getMessage()) . "');
+                </script>";
+            }
+        
+        case 'updateTask':
+            try {
+              $taskController->updateTask($idTask, $title, $description);
+              header('Location: ' . $_SERVER['PHP_SELF']); 
+              exit(); 
+            } catch (Exception $e) {
+                echo "<script type='text/javascript'>
+                    alert('Error: " . addslashes($e->getMessage()) . "');
+                </script>";
+            }
+        
+          
+           
+            break;
+          default:
+            echo "<script>alert('Acción no válida');</script>";
+          }
     
-      
-       
-        break;
-      default:
-        echo "<script>alert('Acción no válida');</script>";
-      }
-
+    }
 }
 
 
@@ -89,13 +110,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input class="form-check-input me-3 checkbox-item" type="checkbox" id="firstCheckbox" data-task-id="1" <?= $task['status'] ? 'checked' : '' ?>>
         <label class="form-check-label fw-bold list-title" for="firstCheckbox"><?php echo $task['title']?></label>
         </div>
-        <!-- Botón de menú desplegable -->
         <div class="dropdown" style="background-color: transparent;">
           <button class="btn btn-light btn-sm dropdown-toggle"style="background-color: transparent; border:  0px;"  type="button" data-bs-toggle="dropdown" aria-expanded="false">
             ☰
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-whatever="<?php echo $task['id']; ?>">✏ Editar</a></li>
+            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editModal<?php echo $task['id']; ?>" data-bs-whatever="<?php echo $task['id']; ?>">✏ Editar</a></li>
             <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#DeleteModal" data-bs-whatever="<?php echo $task['id']; ?>">🗑 Eliminar</a></li>
           </ul>
         </div>
@@ -108,25 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php endif; ?>
 </div>
 <script>
-  const exampleModal = document.getElementById('editModal')
-if (editModal) {
-  editModal.addEventListener('show.bs.modal', event => {
-    // Button that triggered the modal
-    const button = event.relatedTarget
-    // Extract info from data-bs-* attributes
-    const recipient = button.getAttribute('data-bs-whatever')
-    // If necessary, you could initiate an Ajax request here
-    // and then do the updating in a callback.
-
-    // Update the modal's content.
-    const modalTitle = editModal.querySelector('.modal-title')
-
-
-    modalTitle.textContent = `Editar tarea ${recipient}`
-    modalBodyInput.value = recipient
-    modalBodyInputText.value = recipient
-  })
-}
+ 
   const addTaskModal = document.getElementById('addTaskModal')
 if (addTaskModal) {
   addTaskModal.addEventListener('show.bs.modal', event => {
