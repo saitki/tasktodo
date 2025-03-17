@@ -15,8 +15,8 @@ class taskController {
         $task = $this->taskModel->createTask();
         return $task;
     }
-    public function updateTask() {
-        $task = $this->taskModel->updateTask();
+    public function updateTask($idTask, $title, $description) {
+        $task = $this->taskModel->updateTask($idTask, $title, $description);
         return $task;
     }
     public function deteleTask() {
