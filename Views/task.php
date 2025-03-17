@@ -30,6 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </script>";
     }
   }
+
+  if(isset($_POST['idTask'], $_POST['action'])){
+    try {
+      $taskId = $_POST['idTask'];  
+      $action = $_POST['action'];  
+      if($action == "deleteTask"){
+        $taskController->deteleTask($taskId);  
+        header('Location: ' . $_SERVER['PHP_SELF']); 
+        exit(); 
+      }
+    } catch (Exception $e) {
+        echo "<script type='text/javascript'>
+            alert('Error: " . addslashes($e->getMessage()) . "');
+        </script>";
+    }
+  }
     if(isset($_POST['action'], $_POST['idTask'], $_POST['description'])){
       $action = $_POST['action']; 
       $idTask = $_POST['idTask'];  
