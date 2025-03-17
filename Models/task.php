@@ -18,8 +18,13 @@ class task {
     public function createTask(){
 
     }
-    public function updateTask(){
-
+    public function updateTask($idTask, $title, $description){
+        $query = $this->conn->prepare('UPDATE task SET title = :title, description = :description WHERE id = :id');
+        $query->execute([
+            'title' => $title,
+            'description' => $description,
+            'id' => $idTask
+        ]);
     }
     public function updateStatusTask($idTask,$status){
         $query = $this->conn->prepare('UPDATE task SET status = :status WHERE id = :id');
