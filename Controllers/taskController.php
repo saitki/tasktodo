@@ -11,8 +11,8 @@ class taskController {
         $task = $this->taskModel->getAllByUser($idUser);
         return $task;
     }
-    public function createTask() {
-        $task = $this->taskModel->createTask();
+    public function createTask($idUser, $title, $description) {
+        $task = $this->taskModel->createTask($idUser, $title, $description);
         return $task;
     }
     public function updateTask($idTask, $title, $description) {
