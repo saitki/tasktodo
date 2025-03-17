@@ -15,10 +15,15 @@
       <div class="modal-body">
         <label for="" class="title-modal-delete">¿Realmente quieres eliminar la tarea '<?php echo $task['title']?>'?</label>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Eliminar</button>
-      </div>
+      <form method="POST" action="<?=$_SERVER['PHP_SELF']?>">
+          <input type="hidden" name="action" value="deleteTask">
+          <input type="hidden" name="idTask" value="<?php echo $task['id']; ?>">
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" name="btndeletetask" class="btn btn-primary">Eliminar</button>
+          </div>
+      </form>
     </div>
   </div>
 </div>
